@@ -26,10 +26,13 @@ def add_claims_to_access_token(identity):
 class AuthAPI():
     def login():
         req = request
-        username = 'Mike.Hillyer@sakilastaff.com' or request.json.get('username', None)
+        username = request.json.get('username', None)
         password = request.json.get('password', None)
-        app.logger.debug('username {}, password {}'.format(username, password))
-        if username != 'Mike.Hillyer@sakilastaff.com' or password != '12345':
+
+        if not (
+            (username == 'Mike.Hillyer@sakilastaff.com' and password == '12345')
+            or (username == 'Jon.Stephens@sakilastaff.com' and password == '67890')
+        ):
             return jsonify({"msg": "Bad username or password"}), 401
 
         # Create the tokens we will be sending back to the user
