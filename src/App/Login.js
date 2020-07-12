@@ -2,7 +2,7 @@ import React from "react";
 import { Button, FormGroup, FormControl, FormLabel, Container } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useSessionContext } from "../Session";
-import { Modal } from 'react-bootstrap';
+import { Modal, Alert } from 'react-bootstrap';
 
 export function Logout(props) {
 
@@ -120,6 +120,17 @@ export function Login(props) {
                 message={loginErrorMessage ? loginErrorMessage : 'Network response was not ok'}
                 backdrop="static"
             />
+            <div className="mt-5">
+                <h5>Test login accounts</h5>
+                <Alert variant="warning">
+                    <div>Username: Mike.Hillyer@sakilastaff.com</div>
+                    <div>Password: 12345</div>
+                </Alert>
+                <Alert variant="warning">
+                    <div>Username: Jon.Stephens@sakilastaff.com</div>
+                    <div>Password: 67890</div>
+                </Alert>
+            </div>
         </Container>
     );
 }
