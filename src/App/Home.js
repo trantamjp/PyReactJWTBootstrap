@@ -8,8 +8,8 @@ const Home = () => {
     return (
         <Container fluid>
             <h2 className="mt-2">Github</h2>
-            <a href="https://github.com/trantamjp/DVDRentalPyReact" target="_blank" rel="noopener noreferrer">
-                https://github.com/trantamjp/DVDRentalPyReact</a>
+            <a href="https://github.com/trantamjp/PyReactJWTBootstrap" target="_blank" rel="noopener noreferrer">
+                https://github.com/trantamjp/PyReactJWTBootstrap</a>
             <h2 className="mt-2">Sample Data</h2>
             <p>Download from here <a href="https://www.postgresqltutorial.com/postgresql-sample-database/" target="_blank" rel="noopener noreferrer">
                 https://www.postgresqltutorial.com/postgresql-sample-database/</a></p>
