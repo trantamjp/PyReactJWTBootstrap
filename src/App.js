@@ -1,5 +1,5 @@
 import React from "react";
-import Navigation from './AppNavigation';
+import Main from './components/Main';
 import { Container } from "react-bootstrap";
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
       <Container fluid>
         <h1 >Python + React JWT Login + Bootstrap Demo</h1>
       </Container>
-      <Navigation />
+      <Main />
     </>
   )
 };

@@ -3,23 +3,8 @@ import { useTable, usePagination, useSortBy, useFilters } from 'react-table'
 import { Table as BTable, Form, Image, Container, Button, Spinner, Modal, Pagination } from "react-bootstrap";
 import { isEqual } from 'lodash';
 
-import { useConfigContext, useSessionContext } from "../Session";
-
-function actionBoolFilter({ column: { setFilter } }) {
-    return (
-        <Form.Control
-            as="select"
-            size="sm"
-            className="mr-2"
-            onClick={e => { e.stopPropagation(); }}
-            onChange={e => { setFilter(e.target.value || undefined); }}
-        >
-            <option value="">*</option>
-            <option value="1">active</option>
-            <option value="0">Non active</option>
-        </Form.Control>
-    )
-}
+import { useSessionContext } from "../session";
+import { FILM_API_URL } from '../config';
 
 // Define a default UI for filtering
 function DefaultColumnFilter({ column: { filterValue, Header, setFilter } }) {
@@ -145,7 +130,6 @@ function Paging({ pageIndex, pageCount, gotoPage, setPageSize }) {
     );
 }
 
-
 // Let's add a fetchData method to our Table component that will be used to fetch
 // new data when pagination state changes
 // We can also add a loading state to let our table know it's loading new data
@@ -233,8 +217,8 @@ function Table({
     // Render the UI for your table
     return (
         <Container fluid>
-            <h2>Customer List</h2>
-            <BTable {...getTableProps()}>
+            <h2>Film List</h2>
+            <BTable {...getTableProps()} striped bordered hover>
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
@@ -279,15 +263,12 @@ function Table({
                                     Failed to fetch data.
                                 </td>
                             ) :
-                                loading ? (
-                                    // Use our custom loading state to show a loading indicator
-                                    <td colSpan="10000">Loading...</td>
-                                ) : (
-                                        <td colSpan="10000">
-                                            Showing {pageIndex * pageSize + 1} to {pageIndex * pageSize + apiData.data.length} of {apiData.recordsFiltered} entries
-                                            {apiData.recordsFiltered < apiData.recordsTotal ? "(filtered from " + apiData.recordsTotal + " total entries)" : ""}
-                                        </td>
-                                    )
+                                (
+                                    <td colSpan="10000">
+                                        Showing {pageIndex * pageSize + 1} to {pageIndex * pageSize + apiData.data.length} of {apiData.recordsFiltered} entries
+                                        {apiData.recordsFiltered < apiData.recordsTotal ? "(filtered from " + apiData.recordsTotal + " total entries)" : ""}
+                                    </td>
+                                )
                         }
                     </tr>
                 </tbody>
@@ -306,53 +287,47 @@ function Table({
     )
 }
 
-function CustomerTable(props) {
+function FilmTable() {
 
     const { BearerToken } = useSessionContext();
-    const { CUSTOMER_API_URL } = useConfigContext();
 
     const columns = React.useMemo(
         () => [
             {
-                Header: 'First Name',
-                accessor: 'first_name',
+                Header: 'Title',
+                accessor: 'title',
             },
             {
-                Header: 'Last Name',
-                accessor: 'last_name',
+                Header: 'Category',
+                accessor: ((originalRow, rowIndex) =>
+                    originalRow.categories.map(category => category.name).join(', ')
+                ),
+                id: 'categories.category',
+                disableSortBy: true,
             },
             {
-                Header: 'Address',
-                accessor: ((originalRow, rowIndex) => {
-                    const address = originalRow.address;
-                    return [address.address, address.address2].filter(addr => !!addr).join(' ');
-                }),
-                id: 'address.address',
+                Header: 'Actors',
+                accessor: ((originalRow, rowIndex) =>
+                    originalRow.actors.map(actor => actor.full_name).join(', ')
+                ),
+                id: 'actors.full_name',
+                disableSortBy: true,
             },
             {
-                Header: 'City',
-                accessor: 'address.city.city',
+                Header: 'Length',
+                accessor: 'length',
             },
             {
-                Header: 'Zip Code',
-                accessor: 'address.postal_code',
+                Header: 'Rating',
+                accessor: 'rating',
             },
             {
-                Header: 'Country',
-                accessor: 'address.city.country.country',
+                Header: 'Lang',
+                accessor: 'language.name',
             },
             {
-                Header: 'Phone',
-                accessor: 'address.phone',
-            },
-            {
-                Header: 'Active',
-                accessor: ((originalRow, rowIndex) => {
-                    return originalRow.activebool ? 'active' : 'non-active'
-                }),
-                id: 'activebool',
-                Filter: actionBoolFilter,
-                filter: "includes",
+                Header: 'Price',
+                accessor: 'rental_rate',
             },
         ],
         []
@@ -381,7 +356,7 @@ function CustomerTable(props) {
             }
         ));
 
-        return fetch(CUSTOMER_API_URL,
+        return fetch(FILM_API_URL,
             {
                 method: 'POST',
                 cache: 'no-cache',
@@ -408,14 +383,13 @@ function CustomerTable(props) {
                 }
             })
             .catch(function (error) {
-                console.log("Fetching data", error);
                 if (typeof (error) != "string") {
                     error = error.toString()
                 }
                 setApiData({ error: error });
             });
-    }, [CUSTOMER_API_URL, BearerToken]);
 
+    }, [BearerToken]);
 
     return (
         <Table
@@ -426,4 +400,4 @@ function CustomerTable(props) {
     )
 }
 
-export default CustomerTable
+export default FilmTable

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container } from "react-bootstrap";
-import { useConfigContext } from "../Session";
+
+import { CUSTOMER_API_URL, FILM_API_URL } from '../config';
 
 const Home = () => {
-    const { CUSTOMER_API_URL, FILM_API_URL } = useConfigContext();
 
     return (
         <Container fluid>
@@ -17,12 +17,12 @@ const Home = () => {
             <ol>
                 <li>
                     <p>Customer List</p>
-                    <p>DataTable with server-side processing, pulling customer data from the API from {CUSTOMER_API_URL}.
+                    <p>DataTable with server-side processing, pulling customer data from the API located at {CUSTOMER_API_URL}.
                 </p>
                 </li>
                 <li>
                     <p>Films List</p>
-                    <p>DataTable with server-side processing, pulling customer data from the API from {FILM_API_URL}.
+                    <p>DataTable with server-side processing, pulling customer data from the API located at {FILM_API_URL}.
                 </p>
                 </li>
             </ol>

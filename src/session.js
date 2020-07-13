@@ -1,6 +1,8 @@
 import React, { useContext, createContext } from "react";
 import jwt from 'jwt-decode';
 
+import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, AUTH_TOKEN_REFRESH_URL } from './config';
+
 class AuthToken {
     constructor(type, token) {
         if (type in ['accessToken', 'refreshToken']) {
@@ -81,11 +83,6 @@ export function useSessionContext() {
 
 export function SessionProvider(props) {
 
-    const config = useConfigContext();
-    if (!config) {
-        throw new Error('Missing <ConfigProvider>');
-    }
-
     const [refreshToken, , setEncodedRefreshToken] = useAuthToken('refreshToken');
     const [accessToken, , setEncodedAccessToken] = useAuthToken('accessToken');
     const sessionUser = () => accessToken.authUser();
@@ -109,7 +106,7 @@ export function SessionProvider(props) {
         // declair that we are working on it
         isFetchingRef.current = true;
 
-        fetch(config.AUTH_TOKEN_REFRESH_URL,
+        fetch(AUTH_TOKEN_REFRESH_URL,
             {
                 method: 'POST',
                 cache: 'no-cache',
@@ -133,7 +130,7 @@ export function SessionProvider(props) {
                 isFetchingRef.current = false;
             });
 
-    }, [config.AUTH_TOKEN_REFRESH_URL, setEncodedAccessToken, refreshToken]);
+    }, [setEncodedAccessToken, refreshToken]);
 
     React.useEffect(() => {
         if (timeoutHandlerRef.current) {
@@ -156,7 +153,7 @@ export function SessionProvider(props) {
     // Return a promise
     function login(credentials) {
 
-        return fetch(config.AUTH_LOGIN_URL,
+        return fetch(AUTH_LOGIN_URL,
             {
                 method: 'POST',
                 cache: 'no-cache',
@@ -181,7 +178,7 @@ export function SessionProvider(props) {
     }
 
     function logout() {
-        fetch(config.AUTH_LOGOUT_URL,
+        fetch(AUTH_LOGOUT_URL,
             {
                 method: 'POST',
                 cache: 'no-cache',
@@ -196,30 +193,5 @@ export function SessionProvider(props) {
         <SessionContext.Provider value={{ login, logout, sessionUser, isAuthenticated, BearerToken }}>
             {props.children}
         </SessionContext.Provider>
-    )
-}
-
-
-export const ConfigContext = createContext(null);
-
-export function useConfigContext() {
-    return useContext(ConfigContext);
-}
-
-export function ConfigProvider(props) {
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
-        || (window.location.protocol + "//" + window.location.hostname + ":5005");
-
-    const CUSTOMER_API_URL = API_BASE_URL + "/api/datatable/customers";
-    const FILM_API_URL = API_BASE_URL + "/api/datatable/films";
-
-    const AUTH_LOGIN_URL = API_BASE_URL + "/auth/login";
-    const AUTH_LOGOUT_URL = API_BASE_URL + "/auth/logout";
-    const AUTH_TOKEN_REFRESH_URL = API_BASE_URL + "/auth/refresh";
-
-    return (
-        <ConfigContext.Provider value={{ CUSTOMER_API_URL, FILM_API_URL, AUTH_LOGIN_URL, AUTH_LOGOUT_URL, AUTH_TOKEN_REFRESH_URL }}>
-            {props.children}
-        </ConfigContext.Provider>
     )
 }

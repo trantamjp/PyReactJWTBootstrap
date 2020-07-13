@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, FormGroup, FormControl, FormLabel, Container } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { useSessionContext } from "../Session";
+import { useSessionContext } from "../session";
 import { Modal, Alert } from 'react-bootstrap';
 
 export function Logout(props) {

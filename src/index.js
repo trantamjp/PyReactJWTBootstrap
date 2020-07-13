@@ -4,17 +4,15 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { SessionProvider, ConfigProvider } from './Session';
+import { SessionProvider } from './session';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render((
   <BrowserRouter>
-    <ConfigProvider>
-      <SessionProvider>
-        <App />
-      </SessionProvider>
-    </ConfigProvider>
+    <SessionProvider>
+      <App />
+    </SessionProvider>
   </BrowserRouter>
 ), document.getElementById('root'));
 

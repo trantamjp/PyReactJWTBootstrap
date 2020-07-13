@@ -3,13 +3,13 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { Nav, Navbar, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-import { useSessionContext } from "./Session";
-import Home from './App/Home';
-import CustomerTable from './App/Customer';
-import FilmTable from './App/Film';
-import { Login, Logout } from './App/Login';
+import { useSessionContext } from "../session";
+import Home from './Home';
+import CustomerTable from './Customer';
+import FilmTable from './Film';
+import { Login, Logout } from './Login';
 
-const Navigation = () => {
+const Main = () => {
 
   const { sessionUser, isAuthenticated } = useSessionContext();
 
@@ -61,4 +61,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default Main;
